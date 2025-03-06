@@ -1,64 +1,222 @@
 'use client';
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  PieChart,
+  Pie,
   Tooltip,
-  Legend,
+  Cell,
   ResponsiveContainer,
+  LabelList,
+  Label,
 } from 'recharts';
 import { populationData } from '@/data/data';
 
 const Population = ({ fromYear, toYear }) => {
-  // Helper function to format the data for the chart
-  const formatData = (fromYear, toYear) => {
-    const years = Object.keys(populationData.cities.phoenix.population);
-    const filteredYears = years.filter(
-      (year) => year >= fromYear && year <= toYear
+  const phoenixPopulation = populationData.cities.phoenix.population;
+  const sapporoPopulation = populationData.cities.sapporo.population;
+
+  // Generate the data array with year, phoenixPopulation, and sapporoPopulation
+  const phoenixData = Object.keys(phoenixPopulation)
+    .map((year) => ({
+      year: parseInt(year),
+      Phoenix: phoenixPopulation[year],
+    }))
+    .filter(
+      (dataPoint) => dataPoint.year >= fromYear && dataPoint.year <= toYear
     );
 
-    return filteredYears.map((year) => ({
-      name: year,
-      phoenix: populationData.cities.phoenix.population[year],
-      sapporo: populationData.cities.sapporo.population[year],
+  const sapporoData = Object.keys(sapporoPopulation)
+    .map((year) => ({
+      year: parseInt(year),
+      Sapporo: sapporoPopulation[year],
+    }))
+    .filter(
+      (dataPoint) => dataPoint.year >= fromYear && dataPoint.year <= toYear
+    );
+
+  // Define a fixed color palette with 20 colors
+  const colorPalette = [
+    '#FF6347',
+    '#32CD32',
+    '#4682B4',
+    '#FFD700',
+    '#8A2BE2',
+    '#A52A2A',
+    '#5F9EA0',
+    '#D2691E',
+    '#FF4500',
+    '#2E8B57',
+    '#6A5ACD',
+    '#7FFF00',
+    '#DC143C',
+    '#FF1493',
+    '#00BFFF',
+    '#228B22',
+    '#ADFF2F',
+    '#FF69B4',
+    '#C71585',
+    '#8B0000',
+  ];
+
+  // Function to get the color from the palette based on the index of the year
+  const getColorForYear = (year) => {
+    const yearsRange = toYear - fromYear + 1;
+    const index = (year - fromYear) % yearsRange;
+    return colorPalette[index];
+  };
+
+  const generatePieData = (data, cityKey) => {
+    return data.map((item) => ({
+      name: item.year.toString(),
+      value: item[cityKey],
+      color: getColorForYear(item.year),
+      year: item.year, // Add the year to each data point for later use
     }));
   };
 
-  // Filtered data based on the props
-  const data = formatData(fromYear, toYear);
+  const phoenixPieData = generatePieData(phoenixData, 'Phoenix');
+  const sapporoPieData = generatePieData(sapporoData, 'Sapporo');
 
   return (
     <ResponsiveContainer width='100%' aspect={3}>
-      <LineChart
-        width={500}
-        height={300}
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray='3 3' />
-        <XAxis dataKey='name' />
-        <YAxis />
-        <Tooltip
-          contentStyle={{
-            backgroundColor: 'transparent',
-          }}
-        />
-        <Legend />
-        <Line
-          type='monotone'
-          dataKey='phoenix'
-          stroke='#009245'
-          activeDot={{ r: 8 }}
-        />
-        <Line type='monotone' dataKey='sapporo' stroke='#662D8C' />
-      </LineChart>
+      <div className='grid sm:grid-cols-2 gap-4 grid-cols-1'>
+        {/* Pie chart for Phoenix */}
+        <div className='col-span-1 place-items-center'>
+          <h2 className='text-lg'>Phoenix</h2>
+          <PieChart width={800} height={500}>
+            <Pie
+              data={phoenixPieData}
+              dataKey='value'
+              nameKey='name'
+              cx='50%'
+              cy='50%'
+              label={({
+                cx,
+                cy,
+                midAngle,
+                innerRadius,
+                outerRadius,
+                value,
+                index,
+              }) => {
+                const radius = innerRadius + (outerRadius - innerRadius) / 2;
+                const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180);
+                const y = cy + radius * Math.sin((-midAngle * Math.PI) / 180);
+                return (
+                  <text
+                    x={x}
+                    y={y}
+                    textAnchor={x > cx ? 'start' : 'end'}
+                    dominantBaseline='middle'
+                    fontSize={12}
+                    fill='white'
+                  >
+                    {`${phoenixPieData[index].year}`}
+                  </text>
+                );
+              }}
+              innerRadius={100}
+              outerRadius={200}
+              paddingAngle={10}
+              isAnimationActive={true}
+              fill='#009245'
+              stroke='none'
+            >
+              {phoenixPieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+              <Tooltip />
+              {/* Center header text */}
+              <text
+                x='50%'
+                y='50%'
+                textAnchor='middle'
+                dominantBaseline='middle'
+                fontSize={18}
+                fill='white'
+              >
+                Phoenix
+              </text>
+              {/* Display values with spacing and lines */}
+              <LabelList
+                dataKey='value'
+                position='outside'
+                fill='white'
+                fontSize={12}
+                offset={15} // Increase the offset to prevent overlap with the lines
+              />
+            </Pie>
+          </PieChart>
+        </div>
+
+        {/* Pie chart for Sapporo */}
+        <div className='col-span-1 place-items-center'>
+          <h2 className='text-lg'>Sapporo</h2>
+          <PieChart width={800} height={500}>
+            <Pie
+              data={sapporoPieData}
+              dataKey='value'
+              nameKey='name'
+              cx='50%'
+              cy='50%'
+              label={({
+                cx,
+                cy,
+                midAngle,
+                innerRadius,
+                outerRadius,
+                value,
+                index,
+              }) => {
+                const radius = innerRadius + (outerRadius - innerRadius) / 2;
+                const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180);
+                const y = cy + radius * Math.sin((-midAngle * Math.PI) / 180);
+                return (
+                  <text
+                    x={x}
+                    y={y}
+                    textAnchor={x > cx ? 'start' : 'end'}
+                    dominantBaseline='middle'
+                    fontSize={12}
+                    fill='white'
+                  >
+                    {`${sapporoPieData[index].year}`}
+                  </text>
+                );
+              }}
+              innerRadius={100}
+              outerRadius={200}
+              paddingAngle={10}
+              isAnimationActive={true}
+              fill='#662D8C'
+              stroke='none'
+            >
+              {sapporoPieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+              <Tooltip />
+              {/* Center header text */}
+              <text
+                x='50%'
+                y='50%'
+                textAnchor='middle'
+                dominantBaseline='middle'
+                fontSize={18}
+                fill='white'
+              >
+                Sapporo
+              </text>
+              {/* Display values with spacing and lines */}
+              <LabelList
+                dataKey='value'
+                position='outside'
+                fill='white'
+                fontSize={12}
+                offset={15} // Increase the offset to prevent overlap with the lines
+              />
+            </Pie>
+          </PieChart>
+        </div>
+      </div>
     </ResponsiveContainer>
   );
 };
