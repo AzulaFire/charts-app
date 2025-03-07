@@ -361,3 +361,38 @@ export const comparisonData = {
     },
   },
 };
+
+export const cities = [
+  {
+    name: 'Phoenix, AZ',
+    image: '/images/phoenix.jpg', // Replace with the actual path to the image
+    description:
+      'Phoenix, Arizona, is known for its stunning desert landscapes, year-round sunshine, and vibrant city life.',
+    weather:
+      'Phoenix experiences a hot desert climate with temperatures often reaching 100°F (38°C) during summer.',
+    food: 'Famous for its southwestern cuisine, including Sonoran hot dogs and prickly pear dishes.',
+    people:
+      'The city is a diverse melting pot, with a mix of people from all over the U.S. and beyond.',
+    facts: [
+      'Over 1.7 million residents.',
+      'One of the fastest-growing cities in the U.S.',
+      'Known for its art scene and desert trails.',
+    ],
+  },
+  {
+    name: 'Sapporo, Japan',
+    image: '/images/sapporo.jpg', // Replace with the actual path to the image
+    description:
+      'Sapporo, Japan, is famous for its snowy winters, vibrant nightlife, and delicious ramen.',
+    weather:
+      'Sapporo experiences a subarctic climate with long, snowy winters and mild summers.',
+    food: 'Famous for its miso ramen, fresh seafood, and the Sapporo beer.',
+    people:
+      'The people of Sapporo are known for their friendliness, hospitality, and respect for tradition.',
+    facts: [
+      'Population of around 2 million.',
+      'Known for the Sapporo Snow Festival.',
+      'One of the best places to experience Japanese winter sports.',
+    ],
+  },
+];

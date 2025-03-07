@@ -55,6 +55,11 @@ const Population = ({ fromYear, toYear }) => {
     '#FF69B4',
     '#C71585',
     '#8B0000',
+    '#FF8C00',
+    '#20B2AA',
+    '#FFD700',
+    '#9932CC',
+    '#D3D3D3',
   ];
 
   // Function to get the color from the palette based on the index of the year

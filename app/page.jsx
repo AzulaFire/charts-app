@@ -8,11 +8,7 @@ import {
   FaUtensils,
   FaPeopleArrows,
 } from 'react-icons/fa';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import Population from '@/components/Population';
-import Salaries from '@/components/Salaries';
 import {
   Select,
   SelectContent,
@@ -21,45 +17,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { softwareEngineerSalaries } from '@/data/data';
-import Rent from '@/components/Rent';
-import AverageIncomes from '@/components/AverageIncomes';
-import Housing from '@/components/Housing';
 
-const cities = [
-  {
-    name: 'Phoenix, AZ',
-    image: '/images/phoenix.jpg', // Replace with the actual path to the image
-    description:
-      'Phoenix, Arizona, is known for its stunning desert landscapes, year-round sunshine, and vibrant city life.',
-    weather:
-      'Phoenix experiences a hot desert climate with temperatures often reaching 100°F (38°C) during summer.',
-    food: 'Famous for its southwestern cuisine, including Sonoran hot dogs and prickly pear dishes.',
-    people:
-      'The city is a diverse melting pot, with a mix of people from all over the U.S. and beyond.',
-    facts: [
-      'Over 1.7 million residents.',
-      'One of the fastest-growing cities in the U.S.',
-      'Known for its art scene and desert trails.',
-    ],
-  },
-  {
-    name: 'Sapporo, Japan',
-    image: '/images/sapporo.jpg', // Replace with the actual path to the image
-    description:
-      'Sapporo, Japan, is famous for its snowy winters, vibrant nightlife, and delicious ramen.',
-    weather:
-      'Sapporo experiences a subarctic climate with long, snowy winters and mild summers.',
-    food: 'Famous for its miso ramen, fresh seafood, and the Sapporo beer.',
-    people:
-      'The people of Sapporo are known for their friendliness, hospitality, and respect for tradition.',
-    facts: [
-      'Population of around 2 million.',
-      'Known for the Sapporo Snow Festival.',
-      'One of the best places to experience Japanese winter sports.',
-    ],
-  },
-];
+import { Nav } from '@/components/Nav';
+import Rent from '@/components/Rent';
+import Housing from '@/components/Housing';
+import AverageIncomes from '@/components/AverageIncomes';
+import Salaries from '@/components/Salaries';
+import Population from '@/components/Population';
+
+import { softwareEngineerSalaries } from '@/data/data';
+import { cities } from '@/data/data';
 
 const HomePage = () => {
   const [activePage, setActivePage] = useState('home');
@@ -109,81 +76,14 @@ const HomePage = () => {
 
   return (
     <>
-      <nav className='border-b bg-[#1A1A1D] text-white lg:sticky top-0 w-full'>
-        <div className='flex flex-wrap lg:flex-nowrap justify-between items-center text-2xl font-bold text-white mx-4 py-4 gap-4'>
-          {/* Buttons on the left */}
-          <div className='flex flex-wrap gap-2 sm:gap-4'>
-            <Button
-              variant='link'
-              onClick={() => setActivePage('home')}
-              className={activePage === 'home' ? 'text-[#A64D79]' : ''}
-            >
-              Home
-            </Button>
-            <Button
-              variant='link'
-              onClick={() => setActivePage('housing')}
-              className={activePage === 'housing' ? 'text-[#A64D79]' : ''}
-            >
-              Housing
-            </Button>
-            <Button
-              variant='link'
-              onClick={() => setActivePage('incomes')}
-              className={activePage === 'incomes' ? 'text-[#A64D79]' : ''}
-            >
-              Average Incomes
-            </Button>
-            <Button
-              variant='link'
-              onClick={() => setActivePage('salaries')}
-              className={activePage === 'salaries' ? 'text-[#A64D79]' : ''}
-            >
-              IT Salaries
-            </Button>
-            <Button
-              variant='link'
-              onClick={() => setActivePage('population')}
-              className={activePage === 'population' ? 'text-[#A64D79]' : ''}
-            >
-              Population
-            </Button>
-          </div>
-
-          {/* Year Inputs on the right */}
-          <div className='flex flex-wrap lg:flex-nowrap items-center gap-4'>
-            {/* Start Year */}
-            <div className='flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-4'>
-              <Label className='text-sm'>
-                Start Year: <span className='text-xs'>(Min: 2000)</span>
-              </Label>
-              <Input
-                type='number'
-                value={startYear}
-                onChange={(e) => setStartYear(Number(e.target.value))}
-                min={2000}
-                max={2025}
-                className='w-[80px] sm:w-[100px] md:w-[120px]'
-              />
-            </div>
-
-            {/* End Year */}
-            <div className='flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-4'>
-              <Label className='text-sm'>
-                End Year: <span className='text-xs'>(Max: 2025)</span>
-              </Label>
-              <Input
-                type='number'
-                value={endYear}
-                onChange={(e) => setEndYear(Number(e.target.value))}
-                min={2000}
-                max={2025}
-                className='w-[80px] sm:w-[100px] md:w-[120px]'
-              />
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Nav
+        activePage={activePage}
+        setActivePage={setActivePage}
+        startYear={startYear}
+        setStartYear={setStartYear}
+        endYear={endYear}
+        setEndYear={setEndYear}
+      />
 
       {activePage === 'home' && (
         <div className='container mx-auto px-4 py-8'>
